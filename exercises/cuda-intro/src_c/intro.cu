@@ -79,6 +79,8 @@ int main(int argc, char *argv[]) {
     h_out[i] = 0;
   }
 
+  printf("Hello World 1")
+
   /* Part 1B: copy host array h_a to device array d_a */
   cudaMemcpy(h_a, d_a, sz * sizeof(int), cudaMemcpyDeviceToHost);
 
