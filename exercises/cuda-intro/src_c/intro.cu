@@ -66,8 +66,6 @@ int main(int argc, char *argv[]) {
   h_a = (int *) malloc(sz);
   h_out = (int *) malloc(sz);
 
-  printf("Hello World 1");
-
   /* Part 1A: allocate device memory */
   cudaMalloc(&d_a, sz);
 
@@ -77,35 +75,23 @@ int main(int argc, char *argv[]) {
     h_out[i] = 0;
   }
 
-  printf("Hello World 2");
-
   /* Part 1B: copy host array h_a to device array d_a */
   cudaMemcpy(d_a, h_a, sz, cudaMemcpyHostToDevice);
-
-  printf("Hello World 3");
 
   /* Part 2A: configure and launch kernel (un-comment and complete) */
   dim3 blocksPerGrid(1, 1, 1);
   dim3 threadsPerBlock(256, 1, 1);
   negate <<<blocksPerGrid, threadsPerBlock>>>(d_a);
 
-  printf("Hello World 4");
-
   /* wait for all threads to complete and check for errors */
   cudaDeviceSynchronize();
 
-  printf("Hello World 5");
-
   checkCUDAError("kernel invocation");
-
-  printf("Hello World 6");
 
   /* Part 1C: copy device array d_a to host array h_out */
   cudaMemcpy(h_out, d_a, sz, cudaMemcpyDeviceToHost);
 
-  printf("Hello World 7");
-
-//   checkCUDAError("memcpy");
+  checkCUDAError("memcpy");
 
   /* print out the result */
   printf("Results: ");
