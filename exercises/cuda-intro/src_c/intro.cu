@@ -29,7 +29,7 @@ void checkCUDAError(const char*);
 /* The actual array negation kernel (basic single block version) */
 __global__ void negate(int * d_a) {
   /* Part 2B: negate an element of d_a */
-  int i = threadId.x;
+  int i = threadIdx.x;
   d_a[i] = -1.0 * d_a[i];
 }
 
