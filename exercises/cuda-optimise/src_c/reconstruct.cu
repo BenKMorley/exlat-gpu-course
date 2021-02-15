@@ -1,18 +1,14 @@
-/*
- * This is a CUDA code that performs an iterative reverse edge 
+/* This is a CUDA code that performs an iterative reverse edge 
  * detection algorithm.
  *
  * Training material developed by James Perry and Alan Gray
- * Copyright EPCC, The University of Edinburgh, 2013 
- */
+ * Copyright EPCC, The University of Edinburgh, 2013 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
 #include <sys/types.h>
 #include <sys/time.h>
-
 #include "reconstruct.h"
 
 /* Data buffer to read edge data into */
@@ -27,8 +23,6 @@ float output[N+2][N+2];
 
 /* an extra output array to be used for validation of the result */
 float validate_output[N+2][N+2];
-
-
 
 int main(int argc, char *argv[])
 {
@@ -54,18 +48,12 @@ int main(int argc, char *argv[])
   printf("Image size: %dx%d\n", N, N);
   printf("ITERATIONS: %d\n", ITERATIONS);
 
+  #define THREADSPERBLOCK 256
 
-
-
-#define THREADSPERBLOCK 256
-
-if ( N%THREADSPERBLOCK != 0 ){
+  if ( N%THREADSPERBLOCK != 0 ){
     printf("Error: THREADSPERBLOCK must exactly divide N\n");
     exit(1);
- }
-
-
-
+  }
 
   /* allocate memory on device */
   cudaMalloc(&d_input, memSize);
@@ -90,20 +78,15 @@ if ( N%THREADSPERBLOCK != 0 ){
     }
   }
 
-
-
   /* CUDA decomposition */
-    dim3 blocksPerGrid(N/THREADSPERBLOCK,1,1);
-    dim3 threadsPerBlock(THREADSPERBLOCK,1,1);
+  dim3 blocksPerGrid(N/THREADSPERBLOCK,1,1);
+  dim3 threadsPerBlock(THREADSPERBLOCK,1,1);
 
-   printf("Blocks: %d %d %d\n",blocksPerGrid.x,blocksPerGrid.y,blocksPerGrid.z);
-   printf("Threads per block: %d %d %d\n",threadsPerBlock.x,threadsPerBlock.y,threadsPerBlock.z);
+  printf("Blocks: %d %d %d\n",blocksPerGrid.x,blocksPerGrid.y,blocksPerGrid.z);
+  printf("Threads per block: %d %d %d\n",threadsPerBlock.x,threadsPerBlock.y,threadsPerBlock.z);
 
-
-  /*
-   * copy to all the GPU arrays. d_output doesn't need to have this data but
-   * this will zero its halo
-   */
+  /* copy to all the GPU arrays. d_output doesn't need to have this data but
+   * this will zero its halo */
   start_time_inc_data = get_current_time();
   cudaMemcpy( d_input, input, memSize, cudaMemcpyHostToDevice);
   cudaMemcpy( d_output, input, memSize, cudaMemcpyHostToDevice);
@@ -117,33 +100,28 @@ if ( N%THREADSPERBLOCK != 0 ){
  
     cudaDeviceSynchronize();
 
-
-    /* copy the output data from device to host */
-    cudaMemcpy(output, d_output, memSize, cudaMemcpyDeviceToHost);
+    cudaMemcpy(d_input, d_output, memSize, cudaMemcpyDeviceToDevice);
 
     /* copy this same data from host to input buffer on device */
     /*  ready for the next iteration */ 
-    cudaMemcpy( d_input, output, memSize, cudaMemcpyHostToDevice);
-
+    // cudaMemcpy(d_input, output, memSize, cudaMemcpyHostToDevice);
   }
 
+  /* copy the output data from device to host */
+  cudaMemcpy(output, d_output, memSize, cudaMemcpyDeviceToHost);
 
   end_time_inc_data = get_current_time();
 
   checkCUDAError("Main loop");
 
-  /*
-   * run on host for comparison
-   */
-
-
+  /* run on host for comparison*/
   cpu_start_time = get_current_time();
   for (i = 0; i < ITERATIONS; i++) {
 
     /* perform stencil operation */
     for (y = 0; y < N; y++) {
       for (x = 0; x < N; x++) {
-	validate_output[y+1][x+1] = (input[y+1][x] + input[y+1][x+2] +
+	    validate_output[y+1][x+1] = (input[y+1][x] + input[y+1][x+2] +
 				 input[y][x+1] + input[y+2][x+1] \
 				 - edge[y][x]) * 0.25;
       }
@@ -152,14 +130,14 @@ if ( N%THREADSPERBLOCK != 0 ){
     /* copy output back to input buffer */
     for (y = 0; y < N; y++) {
       for (x = 0; x < N; x++) {
-	input[y+1][x+1] = validate_output[y+1][x+1];
+	    input[y+1][x+1] = validate_output[y+1][x+1];
       }
     }
   }
   cpu_end_time = get_current_time();
 
-/* Maximum difference allowed between host result and GPU result */
-#define MAX_DIFF 0.01
+  /* Maximum difference allowed between host result and GPU result */
+  #define MAX_DIFF 0.01
 
   /* check that GPU result matches host result */
   errors = 0;
