@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
   /* Part 2A: configure and launch kernel (un-comment and complete) */
   dim3 blocksPerGrid(1, 1, 1);
   dim3 threadsPerBlock(256, 1, 1);
-  negate<<< blocksPerGrid, threadsPerBlock >>>(d_a);
+  negate <<<blocksPerGrid, threadsPerBlock>>>(d_a);
 
   /* wait for all threads to complete and check for errors */
   cudaDeviceSynchronize();
