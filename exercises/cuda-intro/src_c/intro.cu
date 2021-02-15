@@ -31,8 +31,6 @@ __global__ void negate(int * d_a) {
   /* Part 2B: negate an element of d_a */
   int i = threadIdx.x;
   d_a[i] = -1.0 * d_a[i];
-
-  return 0;
 }
 
 /* Multi-block version of kernel for part 2C */
@@ -46,8 +44,6 @@ __global__ void negate_multiblock(int *d_a) {
   int index = i * blockDim.x + j;
 
   d_a[index] = -d_a[index];
-
-  return 0;
 }
 
 /* Main routine */
@@ -79,7 +75,7 @@ int main(int argc, char *argv[]) {
     h_out[i] = 0;
   }
 
-  printf("Hello World 1")
+  printf("Hello World 1");
 
   /* Part 1B: copy host array h_a to device array d_a */
   cudaMemcpy(h_a, d_a, sz * sizeof(int), cudaMemcpyDeviceToHost);
