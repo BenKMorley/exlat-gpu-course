@@ -28,20 +28,14 @@ __global__ void inverseEdgeDetect(float d_output[N+2][N+2], float d_input[N+2][N
    */
 
   imageCol = blockIdx.x*blockDim.x + threadIdx.x + 1;
-  /*
-   * loop over all columns of the image
-   */
-  for (imageRow = 1; imageRow <= N; imageRow++) {
+  imageRow = blockIdx.y*blockDim.y + threadIdx.y + 1;
 
-
-      /* perform stencil operation */
-      d_output[imageRow][imageCol] = (d_input[imageRow][imageCol-1] 
-				      + d_input[imageRow][imageCol+1] 
-				      + d_input[imageRow-1][imageCol] 
-				      + d_input[imageRow+1][imageCol] 
-				      - d_edge[imageRow][imageCol]) * 0.25; 
-
-  }
+  /* perform stencil operation */
+  d_output[imageRow][imageCol] = (d_input[imageRow][imageCol-1] 
+                + d_input[imageRow][imageCol+1] 
+                + d_input[imageRow-1][imageCol] 
+                + d_input[imageRow+1][imageCol] 
+                - d_edge[imageRow][imageCol]) * 0.25;
 }
 
 

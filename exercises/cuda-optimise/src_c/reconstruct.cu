@@ -79,8 +79,8 @@ int main(int argc, char *argv[])
   }
 
   /* CUDA decomposition */
-  dim3 blocksPerGrid(N/THREADSPERBLOCK,1,1);
-  dim3 threadsPerBlock(THREADSPERBLOCK,1,1);
+  dim3 blocksPerGrid(N/16, N/16, 1);
+  dim3 threadsPerBlock(16, 16, 1);
 
   printf("Blocks: %d %d %d\n",blocksPerGrid.x,blocksPerGrid.y,blocksPerGrid.z);
   printf("Threads per block: %d %d %d\n",threadsPerBlock.x,threadsPerBlock.y,threadsPerBlock.z);
