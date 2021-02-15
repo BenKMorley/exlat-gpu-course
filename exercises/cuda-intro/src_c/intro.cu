@@ -39,8 +39,8 @@ __global__ void negate(int * d_a) {
 
 __global__ void negate_multiblock(int *d_a) {
   /* Part 2C: negate an element of d_a, using multiple blocks this time */
-  int i = blockId.x;
-  int j = threadId.x;
+  int i = blockIdx.x;
+  int j = threadIdx.x;
   int index = i * blockDim.x + j;
 
   d_a[index] = -d_a[index];
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   h_out = (int *) malloc(sz);
 
   /* Part 1A: allocate device memory */
-  err = cudaMalloc(&d_a, sz);
+  cudaMalloc(&d_a, sz);
 
   /* initialise host arrays */
   for (i = 0; i < ARRAY_SIZE; i++) {
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
   }
 
   /* Part 1B: copy host array h_a to device array d_a */
-  err2 = cudaMemcpy(h_a, d_a, sz * sizeof(int), cudaMemcpyDeviceToHost);
+  cudaMemcpy(h_a, d_a, sz * sizeof(int), cudaMemcpyDeviceToHost);
 
   /* Part 2A: configure and launch kernel (un-comment and complete) */
   dim3 blocksPerGrid(1, 1, 1);
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
   checkCUDAError("kernel invocation");
 
   /* Part 1C: copy device array d_a to host array h_out */
-  err3 = cudaMemcpy(h_out, d_a, sz * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(h_out, d_a, sz * sizeof(int), cudaMemcpyHostToDevice);
   checkCUDAError("memcpy");
 
   /* print out the result */
