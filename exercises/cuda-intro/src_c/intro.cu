@@ -34,8 +34,8 @@ __global__ void negate(int * d_a) {
 }
 
 /* Multi-block version of kernel for part 2C */
-#define NUM_BLOCKS  4
-#define THREADS_PER_BLOCK 64
+// #define NUM_BLOCKS  4
+// #define THREADS_PER_BLOCK 64
 
 __global__ void negate_multiblock(int *d_a) {
   /* Part 2C: negate an element of d_a, using multiple blocks this time */
