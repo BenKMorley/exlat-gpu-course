@@ -82,6 +82,8 @@ int main(int argc, char *argv[]) {
   /* Part 1B: copy host array h_a to device array d_a */
   cudaMemcpy(h_a, d_a, sz * sizeof(int), cudaMemcpyDeviceToHost);
 
+  printf("Hello World 3");
+  
   /* Part 2A: configure and launch kernel (un-comment and complete) */
   dim3 blocksPerGrid(1, 1, 1);
   dim3 threadsPerBlock(256, 1, 1);
