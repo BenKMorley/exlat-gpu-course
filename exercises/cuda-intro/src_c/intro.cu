@@ -95,6 +95,8 @@ int main(int argc, char *argv[]) {
   cudaDeviceSynchronize();
   checkCUDAError("kernel invocation");
 
+  printf("Hello World 5");
+
   /* Part 1C: copy device array d_a to host array h_out */
   cudaMemcpy(h_out, d_a, sz * sizeof(int), cudaMemcpyHostToDevice);
   checkCUDAError("memcpy");
