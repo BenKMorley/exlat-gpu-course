@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
   printf("Hello World 2");
 
   /* Part 1B: copy host array h_a to device array d_a */
-  cudaMemcpy(d_a, h_a, sz * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_a, h_a, sz, cudaMemcpyHostToDevice);
 
   printf("Hello World 3");
 
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
   printf("Hello World 6");
 
   /* Part 1C: copy device array d_a to host array h_out */
-  cudaMemcpy(h_out, d_a, sz * sizeof(int), cudaMemcpyDeviceToHost);
+  cudaMemcpy(h_out, d_a, sz, cudaMemcpyDeviceToHost);
 
   printf("Hello World 7");
 
