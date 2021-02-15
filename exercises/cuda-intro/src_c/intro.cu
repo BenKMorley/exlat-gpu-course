@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
 
   printf("Hello World 5");
 
-  /* checkCUDAError("kernel invocation"); */
+  checkCUDAError("kernel invocation");
 
   printf("Hello World 6");
 
