@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
 
   printf("Hello World 7");
 
-  checkCUDAError("memcpy");
+//   checkCUDAError("memcpy");
 
   /* print out the result */
   printf("Results: ");
