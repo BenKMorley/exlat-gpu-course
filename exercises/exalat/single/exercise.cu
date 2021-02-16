@@ -1,18 +1,17 @@
-/*
- * Skeleton for Very Basic Linear Solver Development
+/* Skeleton for Very Basic Linear Solver Development
  *
  * README
  * This template should compile, but is missing relevant functionality.
  * The exercise is to add, step-by-step, the necessary code.
  * STEPS are indicated by comments in the code, e.g.,
  *
- * STEP 1.1(a) Create a vector dot product kernel.
- *
- * Nick Johnson, EPCC && ExaLAT.
- */
+ * Nick Johnson, EPCC && ExaLAT */
 
-#include <stdio.h>
-#include <stdlib.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+
+ /* STEP 1.1(a) Create a vector dot product kernel. */
+
 
 /* Utility function to check for and report CUDA errors */
 void checkCUDAError(const char*);
@@ -20,91 +19,71 @@ void checkCUDAError(const char*);
 /* The number of integer elements in the array */
 #define ARRAY_SIZE 32
 
-/*
- * The number of CUDA blocks and threads per block to use.
+/* The number of CUDA blocks and threads per block to use.
  * These should always multiply to give the array size.
  * For the single block kernel, NUM_BLOCKS should be 1 and
- * THREADS_PER_BLOCK should be the array size
- */
+ * THREADS_PER_BLOCK should be the array size */
 #define NUM_BLOCKS 32
 #define THREADS_PER_BLOCK 32
 
 /* Define max number of devices we expect per node.
  * It's currently 8 on Cirrus, so we keep to that for now. */
-
 #define MAX_DEVICES 8
 
 
-/*
- * Vector Vector product (dot product)
+/* Vector Vector product (dot product)
  * input:  vectorA, pointer to a previously allocated vector
  * input:  vectorB, pointer to a previously allocated vector
  * output: result, pointer to a previously allocated scalar which will
- * contain the dot product A.B
- */
+ * contain the dot product A.B */
 
 __global__ void vector_vector(float *vectorA, float *vectorB, float *result) {
-
-  /*
-   * STEP 1.1(a) Implement your vector dot product here.
-   * STEP 1.1(b) Invoke the kernel from the main loop.
-   */
+  /* STEP 1.1(a) Implement your vector dot product here.
+   * STEP 1.1(b) Invoke the kernel from the main loop.*/
 
 }
 
-/*
- * Matrix Vector product
+/* Matrix Vector product
  * input:  matrix, pointer to matrix with flattened 1-d addressing
  *         A_ij = matrix[j*ARRAY_SIZE + i]
  * input:  vector, pointer to a previously allocated vector
- * output: result, pointer to a previously allocated vector
- */
+ * output: result, pointer to a previously allocated vector */
  
 __global__ void matrix_vector(float *matrix, float *vector, float *result) {
-
-
-  /* STEP 1.2(a) Implement you matrix vector product here.
+    /* STEP 1.2(a) Implement you matrix vector product here.
    * STEP 1.2(b) Invoke the kernel from the main code below and
    * check the result. */
   
 }
 
-/*
- * Vector plus Vector
+/* Vector plus Vector
  * input:  vectorA, pointer to a previously allocated vector
  * input:  vectorB, pointer to a previously allocated vector
  * output: resvector, pointer to a previously allocated vector
- * which will contain the elementwise sum a_i + b_i.
- */
+ * which will contain the elementwise sum a_i + b_i.*/
  
 __global__ void vector_add(float *vectorA, float *vectorB, float *resvector) {
-
   /* STEP 1.3(a) Implement your vector addition here */
   /* STEP 1.3(b) Implement the kernel launch in the main code and check
    * your result for known input */
   
 }
 
-/*
- * Vector plus Factor * Vector
+/* Vector plus Factor * Vector
  * input:  vectorA, pointer to a previously allocated vector
  * input:  vectorB, pointer to a previously allocated vector
  * input:  factor, a scalar which elementwise multiplies the second vector
  * output: resscalar, pointer to a previously allocated vector which
- * contain the result elementwise a_i + f b_i
- */
+ * contain the result elementwise a_i + f b_i */
  
 __global__ void vector_add_factor(float *vectorA, float *vectorB, float factor, float *resvector) {
-
   /* STEP 1.4(a) implement the kernel here, and check the kernel
    * invocation in the main code. */
 }
 
 
-/*
- * Function which seeds a square matrix of ARRAY_SIZE x ARRAY_SIZE
- * with positive values on the diagonal.
- */
+/* Function which seeds a square matrix of ARRAY_SIZE x ARRAY_SIZE
+ * with positive values on the diagonal.*/
 
 __host__ int seedmatrix(float *matrix) {
 
@@ -127,18 +106,10 @@ __host__ int seedmatrix(float *matrix) {
 }
 
 
-
-/* Main function */
-
 int main(int argc, char *argv[]) {
-
-  /*
-   * This is pre-amble code to deal with multiple GPUs, please do not edit.
-   */
+  /* This is pre-amble code to deal with multiple GPUs, please do not edit.*/
   
-  /*
-   * Check that there are some GPUs, but not too many
-   */
+  /* Check that there are some GPUs, but not too many */
 
    int cuda_device_count = 0;
    cudaGetDeviceCount(&cuda_device_count);
@@ -148,9 +119,7 @@ int main(int argc, char *argv[]) {
      return -1;
    }
 
-  /*
-   * We print out the properties of each CUDA device for information.
-   */
+  /* We print out the properties of each CUDA device for information.*/
 
   int i = 0;
   cudaDeviceProp prop;
@@ -162,19 +131,13 @@ int main(int argc, char *argv[]) {
   }
   printf("\n");
 
-  /*
-   * End pre-amble
-   */
+   /* End pre-amble */
 
 
-  /*
-   * Begin main code
-   */
+  /* Begin main code */
 
 
-  /*
-   * Some useful helper sizes and variables
-   */
+  /* Some useful helper sizes and variables */
   int j = 0;
   size_t matrix_sz = ARRAY_SIZE * ARRAY_SIZE * sizeof(float);
   size_t vector_sz = ARRAY_SIZE * sizeof(float);
@@ -183,9 +146,7 @@ int main(int argc, char *argv[]) {
 
   
 
-  /*
-   * Create pointers to hold data on the host
-   */
+  /* Create pointers to hold data on the host */
   float *matrixA = NULL;
   float *vectorR = NULL;
   float *vectorB = NULL;
@@ -196,13 +157,11 @@ int main(int argc, char *argv[]) {
   float *vectorXnew = NULL;
   float *vectorPnew = NULL;
 
-  /*
-   * Allocate memory on host & test it was successful
+  /* Allocate memory on host & test it was successful
    * This is an often missed step and can catch you out
    * We use heap allocations rather than stack for two reasons
    * 1. It makes everything a pointer which marries nicely with cudaMalloc
-   * 2. It would be easy to fill the stack space and we cannot use ulimit on all systems to increase it
-   */
+   * 2. It would be easy to fill the stack space and we cannot use ulimit on all systems to increase it */
   matrixA = (float *) calloc(matrix_sz, 1);
   vectorR = (float *) calloc(vector_sz, 1);
   vectorB = (float *) calloc(vector_sz, 1);
@@ -224,11 +183,9 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  /*
-   * Initialise host arrays
+  /* Initialise host arrays
    * Calloc should push these to be 0, but using this method we can pick anything.
-   * Having a non-zero initialiser for the output array can help spot problems if we never expect a 0 in the output
-   */
+   * Having a non-zero initialiser for the output array can help spot problems if we never expect a 0 in the output */
   seedmatrix(matrixA);
   for (j = 0; j < ARRAY_SIZE; j++){
     vectorP[j] = 0.0;
@@ -242,9 +199,7 @@ int main(int argc, char *argv[]) {
 
 
   
-  /*
-   * Create pointers to hold data on the device
-   */  
+  /* Create pointers to hold data on the device */  
   float *device_matrixA = NULL;
   float *device_vectorR = NULL;
   float *device_vectorB = NULL;
@@ -260,11 +215,9 @@ int main(int argc, char *argv[]) {
 
 
 
-  /*
-   * Set up some useful values
+  /* Set up some useful values
    * threadsPerBlock is as in previous exercises and simply a cast from the macro define
-   * nBlocks is split across the number of devices we have
-   */
+   * nBlocks is split across the number of devices we have */
   dim3 threadsPerBlock(THREADS_PER_BLOCK);
   dim3 nBlocks(NUM_BLOCKS/cuda_device_count);
 
@@ -272,11 +225,9 @@ int main(int argc, char *argv[]) {
   printf("numBlocks: %d\n", (NUM_BLOCKS/cuda_device_count));
   printf("threadsPerBlock: %d\n", THREADS_PER_BLOCK);
 
-  /*
-   * The compiler ignores pragmas statements which it cannot parse, so this can live outside the guard
+  /* The compiler ignores pragmas statements which it cannot parse, so this can live outside the guard
    * The value of cuda_k will be 0 for a serial case so we get a single iteration of this loop
-   * and ergo a single thread of execution.
-   */
+   * and ergo a single thread of execution.*/
 
   for (int cuda_device = 0; cuda_device < cuda_device_count; cuda_device++) {
    
@@ -285,10 +236,8 @@ int main(int argc, char *argv[]) {
     
     printf("Allocate for device: %d %s\n", cuda_device, prop.name);
   
-    /*
-     * Allocate device memory
-     * This is done inside the loop to give us some flexibility in a multi-GPU case
-     */
+    /* Allocate device memory
+     * This is done inside the loop to give us some flexibility in a multi-GPU case */
     cudaMalloc(&device_matrixA, matrix_sz/cuda_device_count);
     checkCUDAError("Device matrixA allocation");
     cudaMalloc(&device_vectorR, vector_sz);
@@ -313,39 +262,27 @@ int main(int argc, char *argv[]) {
     cudaMalloc(&device_scalar, scalar_sz);
     checkCUDAError("Device vectorXnew allocation");
 
-
-
-    /*
-     * This is the start of the initialisation step
-     * We must compute an initial residual r_0, and set p = r_0
-     */
+    /* This is the start of the initialisation step
+     * We must compute an initial residual r_0, and set p = r_0 */
 
     
-    /*
-     * Copy arrays and matrices to device(s)
-     * The offset arrangement helps with >1 GPU
-     */
+    /* Copy arrays and matrices to device(s)
+     * The offset arrangement helps with >1 GPU */
     cudaMemcpy(device_matrixA, matrixA, matrix_sz, cudaMemcpyHostToDevice);
     checkCUDAError("Memcpy: H2D matrix");
     cudaMemcpy(device_vectorX, vectorX, vector_sz, cudaMemcpyHostToDevice);
     checkCUDAError("Memcpy: H2D vectorX");
 
-    /*
-     * Compute Ax_0 and keep the result vector in device memory
-     */
+    /* Compute Ax_0 and keep the result vector in device memory */
 
     /* STEP 1.2(b) Use matrix_vector<<<>>>(); */
    
-    /*
-     * Compute the initial residual r_0 = b - (Ax_0) 
-     */
+    /* Compute the initial residual r_0 = b - (Ax_0) */
     cudaMemcpy(device_vectorB, vectorB, vector_sz, cudaMemcpyHostToDevice);
 
     /* STEP 1.4(b) use (with f = -1.0)  vector_add_factor<<<>>>(); */
 
-    /*
-     * Copy the initial residual vector back to the host
-     */
+    /* Copy the initial residual vector back to the host */
     cudaMemcpy(vectorR, device_vectorR, vector_sz, cudaMemcpyDeviceToHost);
     
     /* Set p_0 = r_0, copy this initial r to device p host side only! */
@@ -357,9 +294,7 @@ int main(int argc, char *argv[]) {
     checkCUDAError("Memcpy: H2D scalar");
     cudaDeviceSynchronize();
 
-    /*
-     * Compute r_0 r_0 and store as device_scalar
-     */
+    /* Compute r_0 r_0 and store as device_scalar */
     /* STEP 1.1(b) Implement the appropriate kernel configuration and
      * for the initial values given, check you have the correct result.
      * Remember to copy result back to host.
@@ -374,48 +309,34 @@ int main(int argc, char *argv[]) {
     float alpha = 0;
     float rsnew = 0;
 
-    /*
-     * This is the end of the initialisation step
-     * We have derived an initial R_0, computed Rs and set P = R_0
-     */
+    /* This is the end of the initialisation step
+     * We have derived an initial R_0, computed Rs and set P = R_0 */
 
 
-    /*
-     * This is the start of the main loop
+    /* This is the start of the main loop
      * We now need to compute alpha, then R_k+1, beta, P_k+1 etc.
-     * Once we have computed the value of (R_k+1)s, ie the updated residual, we can stop.
-     */   
+     * Once we have computed the value of (R_k+1)s, ie the updated residual, we can stop.*/   
     int k = 0;
     for (k = 0; k < ARRAY_SIZE; k++){
     
-      /*
-       * Compute vector Ap_k and store, temporarily, in Pnew
-       */
+      /* Compute vector Ap_k and store, temporarily, in Pnew */
       /* STEP 1.2(b) Use matrix_vector<<<>>>(); */
 
-      /*
-       * Compute Ap_k dot p_k
-       */
+      /* Compute Ap_k dot p_k */
 
       /* STEP 1.1(b) vector_vector<<<>>>(); */
 
 
-      /*
-       * Compute Alpha
-       */
+      /* Compute Alpha */
       alpha = 0;
       alpha = rsold / scalar;
 
-      /*
-       * Compute x_k+1 = x_k + alpha p_k
-       * Store in Xnew
-       */
+      /* Compute x_k+1 = x_k + alpha p_k
+       * Store in Xnew*/
       /* STEP 1.4(b) Use vector_add_factor<<<>>>(): */
 
-      /*
-       * Compute r_k+1 = r_k - alpha Ap_k
-       * Store in Rnew
-       */
+      /* Compute r_k+1 = r_k - alpha Ap_k
+       * Store in Rnew*/
       /* STEP 1.4(b) Use vector_add_factor<<<>>>(): */
   
 
@@ -432,21 +353,16 @@ int main(int argc, char *argv[]) {
 
       /* STEP 1.4(b) vector_add_factor<<<>>>(); */
 
-      /*
-       * Set up for next iteration; copy host vectors.
-       */
+      /* Set up for next iteration; copy host vectors.*/
       rsold = rsnew;
       memcpy(vectorP, vectorPnew, vector_sz);
       memcpy(vectorR, vectorRnew, vector_sz);
       memcpy(vectorX, vectorXnew, vector_sz);
-      
     }
 
     /* STEP 1.5 Recover solution x vector to host */
 
-    /*
-     * Free the device memory
-     */
+    /* Free the device memory*/
     cudaFree(device_matrixA);
     cudaFree(device_vectorR);
     cudaFree(device_vectorB);
@@ -460,11 +376,7 @@ int main(int argc, char *argv[]) {
     
   }
 
-
-  /*
-   * Print the output vector and then free the host memory
-   */
-
+  /* Print the output vector and then free the host memory */
   for (i = 0; i < ARRAY_SIZE; i++) {
     printf("%d ", vectorX[i]);
   }
